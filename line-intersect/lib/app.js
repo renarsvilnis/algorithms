@@ -1,7 +1,12 @@
+var Canvas = require('./canvas.js');
+
 var app = function() {
 
   this.form = window.document.getElementById('line-data');
   this.resultEl = window.document.getElementById('results');
+
+  // set up canvas
+  this.canvas = new Canvas();
 
   this.bindEvents();
 };
@@ -26,6 +31,8 @@ app.prototype.bindEvents = function() {
       that.resultEl.innerHTML = app.MESSAGE.INVALID_PARAMS;
       return;
     }
+
+    that.canvas.drawLines(lines);
 
     // calculate intersection
     var results = that.calculateIntersection(lines[0], lines[1]);
@@ -83,11 +90,26 @@ app.prototype.validateForm = function() {
 
 app.prototype.calculateIntersection = function(line1, line2) {
 
+  // assing lines to more readable variables
+  var p0_x = line1[0].x,
+    p0_y = line1[0].y,
+    p1_x = line1[1].x,
+    p1_y = line1[1].y,
+    p2_x = line2[0].x,
+    p2_y = line2[0].y,
+    p3_x = line2[1].x,
+    p3_y = line2[1].y;
 
-  // TODO: magic
+  // calculate cross product of 2 points
+  var s1_x = p1_x - p0_x,
+    s1_y = p1_y - p0_y,
+    s2_x = p3_x - p2_x,
+    s2_y = p3_y - p2_y;
 
-  var intersection = [12, 124];
-  return intersection;
+  var s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
+  var t = (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+  return s >= 0 && s <= 1 && t >= 0 && t <= 1 ? [p0_x + s * s1_x, p0_y + t * s1_y] : 0;
 };
 
 
