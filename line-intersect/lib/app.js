@@ -38,7 +38,7 @@ app.prototype.bindEvents = function() {
     var results = that.calculateIntersection(lines[0], lines[1]);
 
     // display results
-    var msg = results ? app.MESSAGE.INTERSECT + results[0] + ', ' + results[1] : app.MESSAGE.DONT_INTERSECT;
+    var msg = results ? app.MESSAGE.INTERSECT + roundresults[0].toFixed(3) + ', ' + results[1].toFixed(3) : app.MESSAGE.DONT_INTERSECT;
     that.resultEl.innerHTML = msg;
   });
 };
